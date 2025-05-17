@@ -8,8 +8,8 @@ class TaskModel(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text(500), nullable=True)
     is_completed = Column(Boolean, default=False)
-    created_at = Column(String(50), default=func.now())
-    updated_at = Column(String(50), default=func.now(), onupdate=func.now())
+    created_at = Column(String(50), server_default=func.now())
+    updated_at = Column(String(50), server_default=func.now(), onupdate=func.now())
 
     def __repr__(self):
         return f"<Task {self.id}>"
