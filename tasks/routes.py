@@ -12,11 +12,19 @@ router = APIRouter(tags=["tasks"])
 
 @router.get("/tasks", response_model=List[TaskResponseSchema])
 async def retrieve_tasks_list(
-    db: Session = Depends(get_db),
+    completed: bool = Query(None, description="Filter tasks based on being completed or not"),
+    limit: int = Query(10, gt=0, le=50, description="Limiting the number of items to retrieve"),
+    offset: int = Query(0, ge=0, description="Use for paginating based on passed items"),
+    db: Session = Depends(get_db)
 ):
-    result = query = db.query(TaskModel).all()
-    return result
-
+    query = db.query(TaskModel)
+    
+    if completed is not None:
+        query = query.filter_by(is_completed=completed)
+    
+    query = query.limit(limit).offset(offset)
+    
+    return query.all()
 
 @router.get("/tasks/{task_id}",response_model=TaskResponseSchema)
 async def retrieve_task_detail(task_id: int = Path(..., gt=0),db:Session = Depends(get_db)):
