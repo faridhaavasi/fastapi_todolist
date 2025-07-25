@@ -19,7 +19,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL", default='sqlite:///sqlite.db')
 if not SQLALCHEMY_DATABASE_URL:
     raise ValueError("SQLALCHEMY_DATABASE_URL not set in .env or environment")
 
@@ -28,7 +28,8 @@ config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 # ────────────────────────────────
 # Import models and metadata
 from core.database import Base  # Base = declarative_base() or SQLModel.metadata
-from tasks import models  # Needed to register models with metadata
+from tasks.models import *  # Needed to register models with metadata
+from users.models import *
 
 target_metadata = Base.metadata
 
