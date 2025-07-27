@@ -7,7 +7,7 @@ from core.database import get_db
 from typing import List
 
 
-router = APIRouter(tags=["tasks"], prefix='tasks/')
+router = APIRouter(tags=["tasks"])
 
 
 @router.get("/tasks", response_model=List[TaskResponseSchema])
